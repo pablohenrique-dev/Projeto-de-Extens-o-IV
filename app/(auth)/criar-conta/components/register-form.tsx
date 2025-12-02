@@ -1,58 +1,65 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import { loginAction } from "../actions/login.action";
+
+import { registerAction } from "../actions/register.action";
 import Link from "next/link";
 
 const schema = z.object({
-  email: z.email("E-mail inválido"),
-  senha: z.string().min(6, "A senha precisa ter pelo menos 6 caracteres"),
+  nome: z.string().min(2, "Digite um nome válido"),
+  email: z.string().email("E-mail inválido"),
+  senha: z.string().min(6, "A senha deve ter ao menos 6 caracteres"),
 });
 
 type FormValues = z.infer<typeof schema>;
 
-export function LoginForm() {
+export function RegisterForm() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
+      nome: "",
       email: "",
       senha: "",
     },
   });
 
   async function onSubmit(data: FormValues) {
-    const res = await loginAction(data);
+    const res = await registerAction({
+      nome: data.nome,
+      email: data.email,
+      senha: data.senha,
+    });
 
     if (res.error) {
       setErrorMessage(res.error);
       return;
     }
 
-    router.push("/clientes/dashboard");
+    router.push("/login");
   }
 
   return (
     <>
       <div className="max-w-sm mx-auto mt-20 p-6 border rounded-xl shadow-sm">
-        <h1 className="text-2xl font-bold mb-4">Login</h1>
+        <h1 className="text-2xl font-bold mb-4">Criar Usuário</h1>
 
         {errorMessage && (
           <p className="mb-4 text-red-500 text-sm">{errorMessage}</p>
@@ -62,12 +69,26 @@ export function LoginForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
+              name="nome"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nome do usuário" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>E-mail</FormLabel>
                   <FormControl>
-                    <Input placeholder="email@exemplo.com" {...field} />
+                    <Input placeholder="email@empresa.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -89,16 +110,16 @@ export function LoginForm() {
             />
 
             <Button type="submit" className="w-full">
-              Entrar
+              Criar usuário
             </Button>
           </form>
         </Form>
       </div>
       <Link
-        href="/criar-conta"
+        href="/login"
         className="text-center block mx-auto max-w-[384px] rounded py-2 transition-all hover:bg-black hover:text-white font-semibold mt-4"
       >
-        Criar conta
+        Entrar
       </Link>
     </>
   );

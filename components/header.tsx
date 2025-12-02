@@ -16,7 +16,7 @@ export function Header() {
     <header className="w-full border-b bg-white">
       <div className="container mx-auto flex items-center justify-between py-4">
         {/* Logo / Título */}
-        <Link href="/dashboard" className="text-xl font-bold">
+        <Link href="/clientes/dashboard" className="text-xl font-bold">
           MEUS CLIENTES
         </Link>
 

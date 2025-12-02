@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const PUBLIC_ROUTES = ["/login", "/register"];
+const PUBLIC_ROUTES = ["/login", "/criar-conta"];
 
 export async function middleware(request: Request) {
   const url = new URL(request.url);

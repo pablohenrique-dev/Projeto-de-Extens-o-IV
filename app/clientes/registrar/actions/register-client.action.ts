@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function registerClientAction(data: {
   nome_completo: string;
@@ -29,6 +30,9 @@ export async function registerClientAction(data: {
         telefone: data.telefone,
       },
     });
+
+    revalidatePath("/clientes");
+    revalidatePath("/clientes/dashboard");
 
     return { success: true };
   } catch (err) {
