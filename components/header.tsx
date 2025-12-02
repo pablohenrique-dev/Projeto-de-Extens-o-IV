@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,12 +10,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { logout } from "@/app/actions/log-out";
 
 export function Header() {
   return (
     <header className="w-full border-b bg-white">
       <div className="container mx-auto flex items-center justify-between py-4">
-        {/* Logo / Título */}
         <Link href="/clientes/dashboard" className="text-xl font-bold">
           MEUS CLIENTES
         </Link>
@@ -35,6 +35,14 @@ export function Header() {
           >
             Novo Cliente
           </Link>
+
+          {/* Botão de Sair (Desktop) */}
+          <form action={logout}>
+            <Button variant="destructive" type="submit" className="flex gap-2">
+              <LogOut className="h-4 w-4" />
+              Sair
+            </Button>
+          </form>
         </nav>
 
         {/* Menu Mobile */}
@@ -66,12 +74,17 @@ export function Header() {
                   Novo Cliente
                 </Link>
 
-                <Link
-                  href="/dashboard"
-                  className="text-sm font-medium hover:text-blue-600"
-                >
-                  Dashboard
-                </Link>
+                {/* Botão de Sair (Mobile) */}
+                <form action={logout}>
+                  <Button
+                    variant="destructive"
+                    type="submit"
+                    className="w-full flex gap-2"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sair
+                  </Button>
+                </form>
               </div>
             </SheetContent>
           </Sheet>
