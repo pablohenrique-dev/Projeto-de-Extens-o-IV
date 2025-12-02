@@ -1,0 +1,54 @@
+// ------------------------------
+// Prisma Client Generator
+// ------------------------------
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+// ------------------------------
+// Datasource (Supabase / Postgres)
+// ------------------------------
+datasource db {
+  provider = "postgresql"
+}
+
+// ------------------------------
+// Tabela: usuarios
+// Para login do comércio (email + senha_hash)
+// ------------------------------
+model usuarios {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email      String   @unique
+  senha_hash String   @db.Text
+  nome       String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("usuarios")
+}
+
+// ------------------------------
+// Tabela: clientes
+// Convertida diretamente do SQL enviado
+// ------------------------------
+model clientes {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome_completo   String
+  rua             String
+  numero          String
+  bairro          String
+  cidade          String
+  estado          String
+  cpf             String?  @db.Text
+  residencia_fixa Boolean  @default(false)
+  email           String?  @db.Text
+  telefone        String
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([nome_completo], name: "idx_clientes_nome")
+  @@index([cidade], name: "idx_clientes_cidade")
+  @@index([bairro], name: "idx_clientes_bairro")
+  @@map("clientes")
+}
